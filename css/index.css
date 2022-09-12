@@ -1,0 +1,84 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.fil0 {
+    fill: #cccccc;
+}
+.fil1 {
+    fill: white;
+}
+.fil2 {
+    fill: gray;
+}
+.fil3 {
+    fill: #c6c6c6;
+}
+
+.minesweeper {
+    display: grid;
+}
+
+.mine-box {
+    background: url("../resources/box.svg");
+    width: 20px;
+    height: 20px;
+    background-size: cover;
+}
+
+.flag-box {
+    background: url("../resources/flag-box.svg");
+    background-size: cover;
+}
+
+.mine {
+    background: url("../resources/mine.svg") !important;
+    background-size: cover !important;
+}
+
+.open-box {
+    background: url("../resources/0mine.svg");
+    background-size: cover;
+}
+
+.open-box1 {
+    background: url("../resources/1mine.svg");
+    background-size: cover;
+}
+
+.open-box2 {
+    background: url("../resources/2mine.svg");
+    background-size: cover;
+}
+
+.open-box3 {
+    background: url("../resources/3mine.svg");
+    background-size: cover;
+}
+
+.open-box4 {
+    background: url("../resources/4mine.svg");
+    background-size: cover;
+}
+
+.open-box5 {
+    background: url("../resources/5mine.svg");
+    background-size: cover;
+}
+
+.open-box6 {
+    background: url("../resources/6mine.svg");
+    background-size: cover;
+}
+
+.open-box7 {
+    background: url("../resources/7mine.svg");
+    background-size: cover;
+}
+
+.open-box8 {
+    background: url("../resources/8mine.svg");
+    background-size: cover;
+}
