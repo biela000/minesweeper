@@ -15,10 +15,19 @@ const modalTitle = document.querySelector(".modal-title");
 const modalText = document.querySelector(".modal-text");
 const modalCloseButton = document.querySelector(".close-button");
 
+const flagCountElement = document.querySelector(".flag-count");
+
 function closeModal() {
     modalTitle.classList.remove("lost");
     modal.classList.add("off");
     backdrop.classList.add("off");
+}
+
+function showModal(title, text) {
+    backdrop.classList.remove("off");
+    modal.classList.remove("off");
+    modalTitle.innerText = title;
+    modalText.innerText = text;
 }
 
 modalCloseButton.addEventListener("click", closeModal);
@@ -57,6 +66,9 @@ function settingsSubmitHandler(event) {
     }
 
     if (minesweeperContainer !== null) {
+        flagCountElement.removeChild(
+            document.querySelector(".flag-count-text")
+        );
         minesweeperContainer.clearContainer();
         delete minesweeperContainer;
     }
@@ -73,6 +85,9 @@ class Box {
         this.isUncovered = false;
         this.bombsAround = 0;
         this.className = "open-box";
+        this.correctFlag =
+            (this.isFlagged && this.isBomb) ||
+            (!this.isFlagged && !this.isBomb);
     }
 
     addNearbyBomb() {
@@ -92,6 +107,7 @@ class MineSweeper {
         this.mineCount = Number(minesweeperSettingsInputs.mineCount.value);
 
         this.firstClick = true;
+        this.flagCount = 0;
 
         this.boxes = [];
         this.boxElements = [];
@@ -197,15 +213,32 @@ class MineSweeper {
                 this.boxElements[i][o].addEventListener(
                     "contextmenu",
                     (event) => {
+                        const flagCountText =
+                            document.querySelector(".flag-count-text");
                         event.preventDefault();
-                        this.boxes[i][o].toggleFlag();
-                        this.boxElements[i][o].classList.toggle("flag-box");
-                        if (this.boxes[i][o].isFlagged) {
+                        if (
+                            this.flagCount < this.mineCount &&
+                            !this.boxes[i][o].isFlagged
+                        ) {
+                            this.boxes[i][o].toggleFlag();
+                            this.flagCount++;
+                            if (this.flagCount === this.mineCount) {
+                                console.log("a");
+                                this.tryWinGame();
+                            }
+                            flagCountText.innerText =
+                                this.mineCount - this.flagCount;
+                            this.boxElements[i][o].classList.toggle("flag-box");
                             this.boxElements[i][o].removeEventListener(
                                 "click",
                                 clickHandler
                             );
-                        } else {
+                        } else if (this.boxes[i][o].isFlagged) {
+                            this.boxes[i][o].toggleFlag();
+                            this.flagCount--;
+                            flagCountText.innerText =
+                                this.mineCount - this.flagCount;
+                            this.boxElements[i][o].classList.toggle("flag-box");
                             this.boxElements[i][o].addEventListener(
                                 "click",
                                 clickHandler
@@ -233,6 +266,10 @@ class MineSweeper {
             }
             this.boxElements.push(tmp);
         }
+        const element = document.createElement("h3");
+        element.innerText = this.mineCount;
+        element.classList.add("flag-count-text");
+        flagCountElement.appendChild(element);
     }
 
     openBox(vIndex, hIndex) {
@@ -290,12 +327,19 @@ class MineSweeper {
         for (const bombElement of this.bombElements) {
             bombElement.classList.add("mine");
         }
-        backdrop.classList.remove("off");
-        modal.classList.remove("off");
-        modalTitle.innerText = "PIOTREK";
-        modalTitle.classList.add("lost");
-        modalText.innerText =
-            "Przgrałeś lamusku trzeba było lepiej robić te bomby hahahahahah";
+        showModal("PIOTREK", "prosta przegrana");
+        minesweeperDOMContainer.style.pointerEvents = "none";
+    }
+
+    tryWinGame() {
+        for (const boxArray of this.boxes) {
+            for (const box of boxArray) {
+                if (!box.correctFlag) {
+                    return;
+                }
+            }
+        }
+        showModal("TOMEK", "prosta wygrana");
         minesweeperDOMContainer.style.pointerEvents = "none";
     }
 }
