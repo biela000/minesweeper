@@ -9,13 +9,59 @@ const settingsForm = document.querySelector(".minesweeper-settings");
 const minesweeperDOMContainer = document.querySelector(".minesweeper");
 let minesweeperContainer = null;
 
+const backdrop = document.querySelector(".backdrop");
+const modal = document.querySelector(".modal");
+const modalTitle = document.querySelector(".modal-title");
+const modalText = document.querySelector(".modal-text");
+const modalCloseButton = document.querySelector(".close-button");
+
+function closeModal() {
+    modalTitle.classList.remove("lost");
+    modal.classList.add("off");
+    backdrop.classList.add("off");
+}
+
+modalCloseButton.addEventListener("click", closeModal);
+backdrop.addEventListener("click", closeModal);
+
 function settingsSubmitHandler(event) {
     event.preventDefault();
+    const areInputsValid = {
+        width: +minesweeperSettingsInputs.width.value > 0,
+        height: +minesweeperSettingsInputs.height.value > 0,
+        mineCount: +minesweeperSettingsInputs.mineCount.value > 0,
+    };
+
+    if (!areInputsValid.width) {
+        minesweeperSettingsInputs.width.classList.add("invalid");
+    } else {
+        minesweeperSettingsInputs.width.classList.remove("invalid");
+    }
+    if (!areInputsValid.height) {
+        minesweeperSettingsInputs.height.classList.add("invalid");
+    } else {
+        minesweeperSettingsInputs.height.classList.remove("invalid");
+    }
+    if (!areInputsValid.mineCount) {
+        minesweeperSettingsInputs.mineCount.classList.add("invalid");
+    } else {
+        minesweeperSettingsInputs.mineCount.classList.remove("invalid");
+    }
+
+    if (
+        !areInputsValid.width ||
+        !areInputsValid.height ||
+        !areInputsValid.mineCount
+    ) {
+        return;
+    }
+
     if (minesweeperContainer !== null) {
         minesweeperContainer.clearContainer();
         delete minesweeperContainer;
     }
     minesweeperContainer = new MineSweeper();
+    minesweeperDOMContainer.style.pointerEvents = "auto";
 }
 
 settingsForm.addEventListener("submit", settingsSubmitHandler);
@@ -50,6 +96,7 @@ class MineSweeper {
         this.boxes = [];
         this.boxElements = [];
         this.uncovered = [];
+        this.bombElements = [];
 
         this.generateBoxes();
         this.insertToDOM();
@@ -83,6 +130,9 @@ class MineSweeper {
                 randomHIndex = Math.floor(Math.random() * this.width);
             }
             this.boxes[randomVIndex][randomHIndex].isBomb = true;
+            this.bombElements.push(
+                this.boxElements[randomVIndex][randomHIndex]
+            );
             if (randomVIndex > 0) {
                 this.boxes[randomVIndex - 1][randomHIndex].addNearbyBomb(
                     randomVIndex - 1,
@@ -137,8 +187,8 @@ class MineSweeper {
                         this.CumFS(i, o);
                     } else if (this.boxes[i][o].isBomb) {
                         this.boxes[i][o].isUncovered = true;
-                        this.boxElements[i][o].classList.add("mine");
-                        this.endGame();
+                        this.boxElements[i][o].classList.add("clicked-mine");
+                        this.loseGame(i, o);
                     } else {
                         this.CumFS(i, o);
                     }
@@ -170,7 +220,7 @@ class MineSweeper {
     insertToDOM() {
         let gridColumns = "";
         for (let i = 0; i < this.boxes[0].length; i++) {
-            gridColumns += "20px ";
+            gridColumns += "40px ";
         }
         minesweeperDOMContainer.style.gridTemplateColumns = gridColumns;
         for (let i = 0; i < this.height; i++) {
@@ -196,10 +246,14 @@ class MineSweeper {
     CumFS(vIndex, hIndex) {
         if (
             this.boxes[vIndex][hIndex].bombsAround > 0 &&
-            !this.boxes[vIndex][hIndex].isUncovered
+            !this.boxes[vIndex][hIndex].isUncovered &&
+            !this.boxes[vIndex][hIndex].isFlagged
         ) {
             this.openBox(vIndex, hIndex);
-        } else if (!this.boxes[vIndex][hIndex].isUncovered) {
+        } else if (
+            !this.boxes[vIndex][hIndex].isUncovered &&
+            !this.boxes[vIndex][hIndex].isFlagged
+        ) {
             this.openBox(vIndex, hIndex);
             if (vIndex > 0) {
                 if (hIndex > 0) {
@@ -232,7 +286,16 @@ class MineSweeper {
         minesweeperDOMContainer.innerHTML = "";
     }
 
-    endGame() {
-        console.log("you lost you bastard");
+    loseGame() {
+        for (const bombElement of this.bombElements) {
+            bombElement.classList.add("mine");
+        }
+        backdrop.classList.remove("off");
+        modal.classList.remove("off");
+        modalTitle.innerText = "PIOTREK";
+        modalTitle.classList.add("lost");
+        modalText.innerText =
+            "Przgrałeś lamusku trzeba było lepiej robić te bomby hahahahahah";
+        minesweeperDOMContainer.style.pointerEvents = "none";
     }
 }

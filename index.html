@@ -1,20 +1,38 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Sweeper</title>
-    <link rel="stylesheet" href="css/index.css"/>
+    <title>MiniSweeper</title>
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Silkscreen&display=swap" rel="stylesheet"> 
 </head>
+
 <body>
-    <form class="minesweeper-settings">
-        <input type="number" class="width-input">
-        <input type="number" class="height-input">
-        <input type="number" class="mine-input">
-        <button type="submit" class="settings-submit">Start</button>
-    </form>
-    <div class="minesweeper"></div>
-    <script src="./js/index.js"></script>
+    <div class="backdrop off">
+    </div>
+    <div class="modal off">
+        <h2 class="modal-title"></h2>
+        <p class="modal-text"></p>
+        <button class="close-button">Close</button>
+    </div>
+    <div class="app">
+        <h2 class="heading-underline topline">^^^^^^^^^^^^</h2>
+        <h1 class="main-heading">MiniSweeper</h1>
+        <h2 class="heading-underline">^^^^^^^^^^^^</h2>
+        <form class="minesweeper-settings">
+            <input type="text" class="input width-input" placeholder="Width">
+            <input type="text" class="input height-input" placeholder="Height">
+            <input type="text" class="input mine-input" placeholder="Mines">
+            <button type="submit" class="settings-submit">Generate</button>
+        </form>
+        <div class="minesweeper"></div>
+    </div>
 </body>
+<script src="./js/index.js"></script>
+
 </html>

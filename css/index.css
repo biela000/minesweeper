@@ -1,30 +1,34 @@
+:root {
+    --color1: #f7ecde;
+    --color2: #e9dac1;
+    --color3: #9ed2c6;
+    --color4: #54bab9;
+    --color5: #bdae95;
+}
+
 * {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    font-family: "Silkscreen", cursive;
 }
 
-.fil0 {
-    fill: #cccccc;
-}
-.fil1 {
-    fill: white;
-}
-.fil2 {
-    fill: gray;
-}
-.fil3 {
-    fill: #c6c6c6;
+html {
+    font-family: "Silkscreen", cursive;
+    background-color: var(--color1);
 }
 
 .minesweeper {
     display: grid;
+    width: max-content;
+    margin: auto;
+    margin-top: 50px;
 }
 
 .mine-box {
     background: url("../resources/box.svg");
-    width: 20px;
-    height: 20px;
+    width: 40px;
+    height: 40px;
     background-size: cover;
 }
 
@@ -81,4 +85,100 @@
 .open-box8 {
     background: url("../resources/8mine.svg");
     background-size: cover;
+}
+
+.clicked-mine {
+    background: url("../resources/Cmine.svg") !important;
+    background-size: cover !important;
+}
+
+.invalid {
+    background-color: tomato !important;
+}
+
+.main-heading {
+    text-align: center;
+    font-size: 4em;
+    color: var(--color4);
+    margin-top: -10px;
+}
+
+.heading-underline {
+    font-size: 4em;
+    text-align: center;
+    color: var(--color3);
+}
+
+.topline {
+    transform: rotate(180deg);
+}
+
+.input {
+    background-color: var(--color2);
+    border: 2px solid var(--color5);
+    width: 5rem;
+    height: 2rem;
+    font-size: 1.1em;
+    padding-bottom: 2px;
+    text-align: center;
+}
+
+.minesweeper-settings {
+    margin: auto;
+    width: 500px;
+    display: grid;
+    place-items: center;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-row-gap: 20px;
+}
+
+.settings-submit {
+    grid-column: 1 / 4;
+    width: 5rem;
+    height: 2rem;
+    background-color: var(--color2);
+    border: 2px solid var(--color5);
+    cursor: pointer;
+}
+
+.backdrop {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 2;
+    backdrop-filter: blur(5px);
+}
+
+.modal {
+    position: absolute;
+    z-index: 3;
+    background-color: var(--color1);
+    padding: 20px;
+    border: 5px solid var(--color2);
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.modal-text {
+    margin-top: 2px;
+}
+
+.close-button {
+    width: 6rem;
+    height: 2rem;
+    background-color: var(--color2);
+    border: 2px solid var(--color5);
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.off {
+    display: none;
+}
+
+.lost {
+    color: red;
 }

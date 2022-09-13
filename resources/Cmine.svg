@@ -11,7 +11,7 @@ viewBox="0 0 1.06553 1.06553"
     .fil2 {fill:black}
     .fil4 {fill:white}
     .fil0 {fill:#bdae95}
-    .fil1 {fill:#e9dac1}
+    .fil1 {fill:red}
     .fil3 {fill:url(#id0)}
    ]]>
   </style>
