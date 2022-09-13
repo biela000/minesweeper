@@ -182,3 +182,20 @@ html {
 .lost {
     color: red;
 }
+
+.stats {
+    width: max-content;
+    margin: auto;
+    height: 70px;
+    padding-top: 40px;
+}
+
+.flag-count {
+    display: flex;
+    align-items: center;
+    font-size: 2em;
+}
+
+.flag-count > img {
+    height: 70px;
+}
