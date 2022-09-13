@@ -15,7 +15,11 @@ const modalTitle = document.querySelector(".modal-title");
 const modalText = document.querySelector(".modal-text");
 const modalCloseButton = document.querySelector(".close-button");
 
+const statistics = document.querySelector(".stats");
 const flagCountElement = document.querySelector(".flag-count");
+const timer = document.querySelector(".timer");
+let timerSeconds = 0;
+let timerInterval;
 
 function closeModal() {
     modalTitle.classList.remove("lost");
@@ -28,6 +32,17 @@ function showModal(title, text) {
     modal.classList.remove("off");
     modalTitle.innerText = title;
     modalText.innerText = text;
+}
+
+function addSecond() {
+    timerSeconds++;
+    timer.innerText = Math.floor(timerSeconds / 600);
+    timer.innerText +=
+        Math.floor(timerSeconds / 60) - Math.floor(timerSeconds / 600) * 10;
+    timer.innerText += ":";
+    timer.innerText +=
+        Math.floor(timerSeconds / 10) - Math.floor(timerSeconds / 60) * 6;
+    timer.innerText += timerSeconds % 10;
 }
 
 modalCloseButton.addEventListener("click", closeModal);
@@ -64,14 +79,18 @@ function settingsSubmitHandler(event) {
     ) {
         return;
     }
-
+    statistics.classList.remove("off");
     if (minesweeperContainer !== null) {
         flagCountElement.removeChild(
             document.querySelector(".flag-count-text")
         );
         minesweeperContainer.clearContainer();
         delete minesweeperContainer;
+        timerSeconds = -1;
+        addSecond();
+        clearInterval(timerInterval);
     }
+    timerInterval = setInterval(addSecond, 1000);
     minesweeperContainer = new MineSweeper();
     minesweeperDOMContainer.style.pointerEvents = "auto";
 }
@@ -85,9 +104,6 @@ class Box {
         this.isUncovered = false;
         this.bombsAround = 0;
         this.className = "open-box";
-        this.correctFlag =
-            (this.isFlagged && this.isBomb) ||
-            (!this.isFlagged && !this.isBomb);
     }
 
     addNearbyBomb() {
@@ -200,13 +216,13 @@ class MineSweeper {
                     if (this.firstClick) {
                         this.firstClick = false;
                         this.generateBombs(i, o);
-                        this.CumFS(i, o);
+                        this.CFS(i, o);
                     } else if (this.boxes[i][o].isBomb) {
                         this.boxes[i][o].isUncovered = true;
                         this.boxElements[i][o].classList.add("clicked-mine");
                         this.loseGame(i, o);
                     } else {
-                        this.CumFS(i, o);
+                        this.CFS(i, o);
                     }
                 };
                 this.boxElements[i][o].addEventListener("click", clickHandler);
@@ -223,7 +239,6 @@ class MineSweeper {
                             this.boxes[i][o].toggleFlag();
                             this.flagCount++;
                             if (this.flagCount === this.mineCount) {
-                                console.log("a");
                                 this.tryWinGame();
                             }
                             flagCountText.innerText =
@@ -280,7 +295,7 @@ class MineSweeper {
         );
     }
 
-    CumFS(vIndex, hIndex) {
+    CFS(vIndex, hIndex) {
         if (
             this.boxes[vIndex][hIndex].bombsAround > 0 &&
             !this.boxes[vIndex][hIndex].isUncovered &&
@@ -294,27 +309,27 @@ class MineSweeper {
             this.openBox(vIndex, hIndex);
             if (vIndex > 0) {
                 if (hIndex > 0) {
-                    this.CumFS(vIndex - 1, hIndex - 1);
+                    this.CFS(vIndex - 1, hIndex - 1);
                 }
                 if (hIndex < this.width - 1) {
-                    this.CumFS(vIndex - 1, hIndex + 1);
+                    this.CFS(vIndex - 1, hIndex + 1);
                 }
-                this.CumFS(vIndex - 1, hIndex);
+                this.CFS(vIndex - 1, hIndex);
             }
             if (vIndex < this.height - 1) {
                 if (hIndex > 0) {
-                    this.CumFS(vIndex + 1, hIndex - 1);
+                    this.CFS(vIndex + 1, hIndex - 1);
                 }
                 if (hIndex < this.width - 1) {
-                    this.CumFS(vIndex + 1, hIndex + 1);
+                    this.CFS(vIndex + 1, hIndex + 1);
                 }
-                this.CumFS(vIndex + 1, hIndex);
+                this.CFS(vIndex + 1, hIndex);
             }
             if (hIndex > 0) {
-                this.CumFS(vIndex, hIndex - 1);
+                this.CFS(vIndex, hIndex - 1);
             }
             if (hIndex < this.width - 1) {
-                this.CumFS(vIndex, hIndex + 1);
+                this.CFS(vIndex, hIndex + 1);
             }
         }
     }
@@ -324,22 +339,32 @@ class MineSweeper {
     }
 
     loseGame() {
+        clearInterval(timerInterval);
         for (const bombElement of this.bombElements) {
             bombElement.classList.add("mine");
         }
-        showModal("PIOTREK", "prosta przegrana");
+        showModal(
+            "You lost.",
+            `You've stomped into a mine having put down ${this.flagCount} flag/s.`
+        );
         minesweeperDOMContainer.style.pointerEvents = "none";
     }
 
     tryWinGame() {
         for (const boxArray of this.boxes) {
             for (const box of boxArray) {
-                if (!box.correctFlag) {
+                if (
+                    !(
+                        (!box.isBomb && !box.isFlagged) ||
+                        (box.isBomb && box.isFlagged)
+                    )
+                ) {
                     return;
                 }
             }
         }
-        showModal("TOMEK", "prosta wygrana");
+        clearInterval(timerInterval);
+        showModal("You won!", "You've flagged all of the hazardous mines! 😎");
         minesweeperDOMContainer.style.pointerEvents = "none";
     }
 }

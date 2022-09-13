@@ -30,6 +30,7 @@ html {
     width: 40px;
     height: 40px;
     background-size: cover;
+    transition: background background-size 0.5s !important;
 }
 
 .flag-box {
@@ -176,7 +177,7 @@ html {
 }
 
 .off {
-    display: none;
+    display: none !important;
 }
 
 .lost {
@@ -188,12 +189,28 @@ html {
     margin: auto;
     height: 70px;
     padding-top: 40px;
+    display: flex;
+    align-items: center;
+    gap: 100px;
+}
+
+.timer {
+    font-size: 2em;
+    background-color: var(--color2);
+    border: 2px solid var(--color5);
+    width: 7rem;
+    padding-bottom: 5px;
+    padding-left: 0.5px;
 }
 
 .flag-count {
     display: flex;
     align-items: center;
     font-size: 2em;
+}
+
+.flag-count-text {
+    margin-top: -5px;
 }
 
 .flag-count > img {
