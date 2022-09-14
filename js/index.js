@@ -160,7 +160,7 @@ class MineSweeper {
         }
 
         workBoxes = workBoxes.filter(
-            (workBox) => workBox[0] != vIndex && workBox[1] != hIndex
+            (workBox) => workBox[0] != vIndex || workBox[1] != hIndex
         );
 
         for (let i = 0; i < this.mineCount && workBoxes.length > 0; i++) {
