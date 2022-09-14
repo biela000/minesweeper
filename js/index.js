@@ -50,10 +50,15 @@ backdrop.addEventListener("click", closeModal);
 
 function settingsSubmitHandler(event) {
     event.preventDefault();
+    const widthValue = +minesweeperSettingsInputs.width.value;
+    const heightValue = +minesweeperSettingsInputs.height.value;
+    const mineCountValue = +minesweeperSettingsInputs.mineCount.value;
     const areInputsValid = {
-        width: +minesweeperSettingsInputs.width.value > 0,
-        height: +minesweeperSettingsInputs.height.value > 0,
-        mineCount: +minesweeperSettingsInputs.mineCount.value > 0,
+        width: widthValue > 0,
+        height: heightValue > 0,
+        mineCount:
+            mineCountValue > 0 &&
+            mineCountValue < (widthValue - 1) * (heightValue - 1),
     };
 
     if (!areInputsValid.width) {
@@ -147,62 +152,63 @@ class MineSweeper {
     }
 
     generateBombs(vIndex, hIndex) {
-        for (
-            let i = 0;
-            i < this.height * this.width && i < this.mineCount;
-            i++
-        ) {
-            let randomVIndex = Math.floor(Math.random() * this.height);
-            let randomHIndex = Math.floor(Math.random() * this.width);
-            while (
-                this.boxes[randomVIndex][randomHIndex].isBomb &&
-                (randomVIndex !== vIndex || randomHIndex !== hIndex)
-            ) {
-                randomVIndex = Math.floor(Math.random() * this.height);
-                randomHIndex = Math.floor(Math.random() * this.width);
+        let workBoxes = [];
+        for (let i = 0; i < this.height; i++) {
+            for (let o = 0; o < this.width; o++) {
+                workBoxes.push([i, o]);
             }
-            this.boxes[randomVIndex][randomHIndex].isBomb = true;
+        }
+
+        workBoxes = workBoxes.filter(
+            (workBox) => workBox[0] != vIndex && workBox[1] != hIndex
+        );
+
+        for (let i = 0; i < this.mineCount && workBoxes.length > 0; i++) {
+            let randomIndexes =
+                workBoxes[Math.floor(Math.random() * workBoxes.length)];
+            console.log(randomIndexes);
+            this.boxes[randomIndexes[0]][randomIndexes[1]].isBomb = true;
             this.bombElements.push(
-                this.boxElements[randomVIndex][randomHIndex]
+                this.boxElements[randomIndexes[0]][randomIndexes[1]]
             );
-            if (randomVIndex > 0) {
-                this.boxes[randomVIndex - 1][randomHIndex].addNearbyBomb(
-                    randomVIndex - 1,
-                    randomHIndex
-                );
+            workBoxes = workBoxes.filter((workBox) => workBox != randomIndexes);
+            if (randomIndexes[0] > 0) {
+                this.boxes[randomIndexes[0] - 1][
+                    randomIndexes[1]
+                ].addNearbyBomb(randomIndexes[0] - 1, randomIndexes[1]);
             }
-            if (randomVIndex < this.height - 1) {
-                this.boxes[randomVIndex + 1][randomHIndex].addNearbyBomb(
-                    randomVIndex + 1,
-                    randomHIndex
-                );
+            if (randomIndexes[0] < this.height - 1) {
+                this.boxes[randomIndexes[0] + 1][
+                    randomIndexes[1]
+                ].addNearbyBomb(randomIndexes[0] + 1, randomIndexes[1]);
             }
-            if (randomHIndex > 0) {
-                this.boxes[randomVIndex][randomHIndex - 1].addNearbyBomb(
-                    randomVIndex,
-                    randomHIndex - 1
-                );
-                if (randomVIndex > 0) {
-                    this.boxes[randomVIndex - 1][
-                        randomHIndex - 1
-                    ].addNearbyBomb(randomVIndex - 1, randomHIndex - 1);
+            if (randomIndexes[1] > 0) {
+                this.boxes[randomIndexes[0]][
+                    randomIndexes[1] - 1
+                ].addNearbyBomb(randomIndexes[0], randomIndexes[1] - 1);
+                if (randomIndexes[0] > 0) {
+                    this.boxes[randomIndexes[0] - 1][
+                        randomIndexes[1] - 1
+                    ].addNearbyBomb(randomIndexes[0] - 1, randomIndexes[1] - 1);
                 }
-                if (randomVIndex < this.height - 1) {
-                    this.boxes[randomVIndex + 1][
-                        randomHIndex - 1
-                    ].addNearbyBomb(randomVIndex + 1, randomVIndex - 1);
+                if (randomIndexes[0] < this.height - 1) {
+                    this.boxes[randomIndexes[0] + 1][
+                        randomIndexes[1] - 1
+                    ].addNearbyBomb(randomIndexes[0] + 1, randomIndexes[0] - 1);
                 }
             }
-            if (randomHIndex < this.width - 1) {
-                this.boxes[randomVIndex][randomHIndex + 1].addNearbyBomb();
-                if (randomVIndex > 0) {
-                    this.boxes[randomVIndex - 1][
-                        randomHIndex + 1
+            if (randomIndexes[1] < this.width - 1) {
+                this.boxes[randomIndexes[0]][
+                    randomIndexes[1] + 1
+                ].addNearbyBomb();
+                if (randomIndexes[0] > 0) {
+                    this.boxes[randomIndexes[0] - 1][
+                        randomIndexes[1] + 1
                     ].addNearbyBomb();
                 }
-                if (randomVIndex < this.height - 1) {
-                    this.boxes[randomVIndex + 1][
-                        randomHIndex + 1
+                if (randomIndexes[0] < this.height - 1) {
+                    this.boxes[randomIndexes[0] + 1][
+                        randomIndexes[1] + 1
                     ].addNearbyBomb();
                 }
             }
@@ -266,11 +272,7 @@ class MineSweeper {
     }
 
     insertToDOM() {
-        let gridColumns = "";
-        for (let i = 0; i < this.boxes[0].length; i++) {
-            gridColumns += "40px ";
-        }
-        minesweeperDOMContainer.style.gridTemplateColumns = gridColumns;
+        minesweeperDOMContainer.style.gridTemplateColumns = `repeat(${this.boxes[0].length}, 40px)`;
         for (let i = 0; i < this.height; i++) {
             const tmp = [];
             for (let o = 0; o < this.width; o++) {
