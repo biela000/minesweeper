@@ -108,6 +108,7 @@ class Box {
         this.isFlagged = false;
         this.isUncovered = false;
         this.bombsAround = 0;
+        this.flagsAround = 0;
         this.className = "open-box";
     }
 
@@ -129,10 +130,10 @@ class MineSweeper {
 
         this.firstClick = true;
         this.flagCount = 0;
+        this.uncoveredCount = 0;
 
         this.boxes = [];
         this.boxElements = [];
-        this.uncovered = [];
         this.bombElements = [];
 
         this.generateBoxes();
@@ -166,7 +167,6 @@ class MineSweeper {
         for (let i = 0; i < this.mineCount && workBoxes.length > 0; i++) {
             let randomIndexes =
                 workBoxes[Math.floor(Math.random() * workBoxes.length)];
-            console.log(randomIndexes);
             this.boxes[randomIndexes[0]][randomIndexes[1]].isBomb = true;
             this.bombElements.push(
                 this.boxElements[randomIndexes[0]][randomIndexes[1]]
@@ -218,53 +218,28 @@ class MineSweeper {
     addClickListeners() {
         for (let i = 0; i < this.height; i++) {
             for (let o = 0; o < this.width; o++) {
-                const clickHandler = () => {
-                    if (this.firstClick) {
+                this.boxElements[i][o].addEventListener("click", () => {
+                    if (
+                        this.boxes[i][o].isUncovered &&
+                        this.boxes[i][o].flagsAround ===
+                            this.boxes[i][o].bombsAround
+                    ) {
+                        this.CFS(i, o, "UNCOVER");
+                    } else if (this.boxes[i][o].isUncovered) {
+                        return;
+                    } else if (this.firstClick) {
                         this.firstClick = false;
                         this.generateBombs(i, o);
                         this.CFS(i, o);
-                    } else if (this.boxes[i][o].isBomb) {
-                        this.boxes[i][o].isUncovered = true;
-                        this.boxElements[i][o].classList.add("clicked-mine");
-                        this.loseGame(i, o);
                     } else {
                         this.CFS(i, o);
                     }
-                };
-                this.boxElements[i][o].addEventListener("click", clickHandler);
+                });
                 this.boxElements[i][o].addEventListener(
                     "contextmenu",
                     (event) => {
-                        const flagCountText =
-                            document.querySelector(".flag-count-text");
                         event.preventDefault();
-                        if (
-                            this.flagCount < this.mineCount &&
-                            !this.boxes[i][o].isFlagged
-                        ) {
-                            this.boxes[i][o].toggleFlag();
-                            this.flagCount++;
-                            if (this.flagCount === this.mineCount) {
-                                this.tryWinGame();
-                            }
-                            flagCountText.innerText =
-                                this.mineCount - this.flagCount;
-                            this.boxElements[i][o].classList.toggle("flag-box");
-                            this.boxElements[i][o].removeEventListener(
-                                "click",
-                                clickHandler
-                            );
-                        } else if (this.boxes[i][o].isFlagged) {
-                            this.boxes[i][o].toggleFlag();
-                            this.flagCount--;
-                            flagCountText.innerText =
-                                this.mineCount - this.flagCount;
-                            this.boxElements[i][o].classList.toggle("flag-box");
-                            this.boxElements[i][o].addEventListener(
-                                "click",
-                                clickHandler
-                            );
-                        }
+                        this.CFS(i, o, "FLAG");
                     }
                 );
             }
@@ -290,48 +265,87 @@ class MineSweeper {
     }
 
     openBox(vIndex, hIndex) {
-        this.boxes[vIndex][hIndex].isUncovered = true;
-        this.boxElements[vIndex][hIndex].style.pointerEvents = "none";
-        this.boxElements[vIndex][hIndex].classList.add(
-            this.boxes[vIndex][hIndex].className
-        );
+        if (!this.boxes[vIndex][hIndex].isBomb) {
+            this.boxes[vIndex][hIndex].isUncovered = true;
+            this.uncoveredCount++;
+            this.boxElements[vIndex][hIndex].classList.add(
+                this.boxes[vIndex][hIndex].className
+            );
+            if (
+                this.uncoveredCount ===
+                this.height * this.width - this.mineCount
+            ) {
+                this.winGame();
+            }
+        } else {
+            this.boxes[vIndex][hIndex].isUncovered = true;
+            this.boxElements[vIndex][hIndex].classList.add("clicked-mine");
+            this.loseGame(vIndex, hIndex);
+        }
     }
 
-    CFS(vIndex, hIndex) {
+    CFS(vIndex, hIndex, specialType = "") {
         if (
             this.boxes[vIndex][hIndex].bombsAround > 0 &&
             !this.boxes[vIndex][hIndex].isUncovered &&
-            !this.boxes[vIndex][hIndex].isFlagged
+            !this.boxes[vIndex][hIndex].isFlagged &&
+            !specialType
         ) {
             this.openBox(vIndex, hIndex);
         } else if (
-            !this.boxes[vIndex][hIndex].isUncovered &&
-            !this.boxes[vIndex][hIndex].isFlagged
+            (!this.boxes[vIndex][hIndex].isUncovered &&
+                !this.boxes[vIndex][hIndex].isFlagged) ||
+            specialType
         ) {
-            this.openBox(vIndex, hIndex);
-            if (vIndex > 0) {
+            if (!specialType) {
+                this.openBox(vIndex, hIndex);
+            }
+            if (
+                specialType === "FLAG" &&
+                !this.boxes[vIndex][hIndex].isUncovered
+            ) {
+                const flagCountText =
+                    document.querySelector(".flag-count-text");
+                this.boxes[vIndex][hIndex].toggleFlag();
+                this.flagCount += this.boxes[vIndex][hIndex].isFlagged ? 1 : -1;
+                flagCountText.innerText = this.mineCount - this.flagCount;
+                this.boxElements[vIndex][hIndex].classList.toggle("flag-box");
+            }
+            if (specialType === "FLAGAROUND") {
+                this.boxes[vIndex][hIndex].flagsAround++;
+            } else if (specialType === "DEFLAGAROUND") {
+                this.boxes[vIndex][hIndex].flagsAround--;
+            } else {
+                const newSpecialType =
+                    specialType === "FLAG"
+                        ? this.boxes[vIndex][hIndex].isFlagged
+                            ? "FLAGAROUND"
+                            : "DEFLAGAROUND"
+                        : "";
+                if (vIndex > 0) {
+                    if (hIndex > 0) {
+                        this.CFS(vIndex - 1, hIndex - 1, newSpecialType);
+                    }
+                    if (hIndex < this.width - 1) {
+                        this.CFS(vIndex - 1, hIndex + 1, newSpecialType);
+                    }
+                    this.CFS(vIndex - 1, hIndex, newSpecialType);
+                }
+                if (vIndex < this.height - 1) {
+                    if (hIndex > 0) {
+                        this.CFS(vIndex + 1, hIndex - 1, newSpecialType);
+                    }
+                    if (hIndex < this.width - 1) {
+                        this.CFS(vIndex + 1, hIndex + 1, newSpecialType);
+                    }
+                    this.CFS(vIndex + 1, hIndex, newSpecialType);
+                }
                 if (hIndex > 0) {
-                    this.CFS(vIndex - 1, hIndex - 1);
+                    this.CFS(vIndex, hIndex - 1, newSpecialType);
                 }
                 if (hIndex < this.width - 1) {
-                    this.CFS(vIndex - 1, hIndex + 1);
+                    this.CFS(vIndex, hIndex + 1, newSpecialType);
                 }
-                this.CFS(vIndex - 1, hIndex);
-            }
-            if (vIndex < this.height - 1) {
-                if (hIndex > 0) {
-                    this.CFS(vIndex + 1, hIndex - 1);
-                }
-                if (hIndex < this.width - 1) {
-                    this.CFS(vIndex + 1, hIndex + 1);
-                }
-                this.CFS(vIndex + 1, hIndex);
-            }
-            if (hIndex > 0) {
-                this.CFS(vIndex, hIndex - 1);
-            }
-            if (hIndex < this.width - 1) {
-                this.CFS(vIndex, hIndex + 1);
             }
         }
     }
@@ -352,19 +366,7 @@ class MineSweeper {
         minesweeperDOMContainer.style.pointerEvents = "none";
     }
 
-    tryWinGame() {
-        for (const boxArray of this.boxes) {
-            for (const box of boxArray) {
-                if (
-                    !(
-                        (!box.isBomb && !box.isFlagged) ||
-                        (box.isBomb && box.isFlagged)
-                    )
-                ) {
-                    return;
-                }
-            }
-        }
+    winGame() {
         clearInterval(timerInterval);
         showModal("You won!", "You've flagged all of the hazardous mines! 😎");
         minesweeperDOMContainer.style.pointerEvents = "none";
