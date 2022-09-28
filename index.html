@@ -38,11 +38,12 @@
         <h2 class="heading-underline topline">^^^^^^^^^^^^</h2>
         <h1 class="main-heading">MiniSweeper</h1>
         <h2 class="heading-underline">^^^^^^^^^^^^</h2>
+        <a href="scoreboard.html" class="scoreboard-link">Scoreboard</a>
         <form class="minesweeper-settings">
             <input type="text" class="input width-input" placeholder="Width">
             <input type="text" class="input height-input" placeholder="Height">
             <input type="text" class="input mine-input" placeholder="Mines">
-            <button type="submit" class="settings-submit">Generate</button>
+            <button type="submit" class="settings-submit">Start</button>
         </form>
         <div class="stats off">
             <div class="flag-count"><img src="./resources/flag-icon.svg" alt="Flag"></div>
@@ -50,7 +51,8 @@
         </div>
         <div class="minesweeper"></div>
     </div>
-    <script src="./js/index.js"></script>
+    <script type="module" src="./js/CookieHandler.js"></script>
+    <script type="module" src="./js/index.js"></script>
 </body>
 
 </html>

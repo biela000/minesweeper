@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniSweeper</title>
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="css/scoreboard.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Silkscreen&display=swap" rel="stylesheet"> 
+</head>
+
+<body>
+    <div class="scoreboard-title">
+        <h2 class="heading-underline topline">^^^^^^^^^^^^</h2>
+        <h1 class="main-heading">Scoreboard</h1>
+        <h2 class="heading-underline">^^^^^^^^^^^^</h2>
+    </div>
+    <a href="index.html" class="scoreboard-link">MINISWEEPER</a>
+    <div class="scoreboard-selects">
+        <div class="scoreboard-select">
+            <label for="amount-inp">Amount</label>
+            <select class="amount-input" name="amount" id="amount-inp"></select>
+        </div>
+        <div class="scoreboard-select">
+            <label for="sort-inp">Sort</label>
+            <select class="sort-input" name="sort" id="sort-inp">
+                <option value="DESC">Descending</option>
+                <option value="ASC">Ascending</option>
+            </select>
+        </div>
+    </div>
+    <div class="scoreboard-names">
+        <div>Id</div>
+        <div>Box amount</div>
+        <div>Mine amount</div>
+        <div>Time</div>
+        <div>Score</div>
+    </div>
+    <ul class="scoreboard"></ul>
+    <script type="module" src="./js/CookieHandler.js"></script>
+    <script type="module" src="./js/scoreboard.js"></script>
+</body>
+
+</html>

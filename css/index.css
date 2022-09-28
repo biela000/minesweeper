@@ -216,3 +216,12 @@ html {
 .flag-count > img {
     height: 70px;
 }
+
+.scoreboard-link {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    color: var(--color4);
+    font-size: 2em;
+    margin-bottom: 30px;
+}

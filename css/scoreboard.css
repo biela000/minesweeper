@@ -1,0 +1,52 @@
+.scoreboard-selects {
+    width: max-content;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+.scoreboard-select {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.amount-input,
+.sort-input {
+    background-color: var(--color2);
+    padding: 0 0.75em;
+    height: 3em;
+}
+
+.scoreboard-names {
+    display: grid;
+    width: 80%;
+    max-width: 1200px;
+    place-items: center;
+    margin: 30px auto 0 auto;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    font-size: 1.5em;
+    color: var(--color4);
+}
+
+.scoreboard-names > div {
+    text-align: center;
+}
+
+.scoreboard {
+    margin: 10px auto 0 auto;
+    width: 80%;
+    max-width: 1200px;
+}
+
+.scoreboard-record {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(5, 1fr);
+    place-items: center;
+    gap: 10px;
+    font-size: 1.2em;
+}

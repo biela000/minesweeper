@@ -1,3 +1,5 @@
+import CookieHandler from "./CookieHandler.js";
+
 const minesweeperSettingsInputs = {
     width: document.querySelector(".width-input"),
     height: document.querySelector(".height-input"),
@@ -90,7 +92,8 @@ function settingsSubmitHandler(event) {
             document.querySelector(".flag-count-text")
         );
         minesweeperContainer.clearContainer();
-        delete minesweeperContainer;
+        // delete minesweeperContainer;
+        minesweeperContainer = null;
         timerSeconds = -1;
         addSecond();
         clearInterval(timerInterval);
@@ -367,8 +370,22 @@ class MineSweeper {
     }
 
     winGame() {
-        clearInterval(timerInterval);
         showModal("You won!", "You've flagged all of the hazardous mines! 😎");
         minesweeperDOMContainer.style.pointerEvents = "none";
+        CookieHandler.post({
+            id: Date.now(),
+            boxCount: this.width * this.height,
+            mineCount: this.mineCount,
+            time: timer.innerText,
+            score: Math.round(
+                (this.mineCount /
+                    (this.width * this.height) /
+                    (timerSeconds > 0
+                        ? timerSeconds
+                        : 1 / (this.width * this.height))) *
+                    1000
+            ),
+        });
+        clearInterval(timerInterval);
     }
 }
