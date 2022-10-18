@@ -1,227 +1,233 @@
 :root {
-    --color1: #f7ecde;
-    --color2: #e9dac1;
-    --color3: #9ed2c6;
-    --color4: #54bab9;
-    --color5: #bdae95;
+  --color1: #f7ecde;
+  --color2: #e9dac1;
+  --color3: #9ed2c6;
+  --color4: #54bab9;
+  --color5: #bdae95;
 }
 
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: "Silkscreen", cursive;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Silkscreen", cursive;
 }
 
 html {
-    font-family: "Silkscreen", cursive;
-    background-color: var(--color1);
+  font-family: "Silkscreen", cursive;
+  background-color: var(--color1);
+  min-height: 100%;
+}
+
+body {
+  position: relative;
+  min-height: 100%;
 }
 
 .minesweeper {
-    display: grid;
-    width: max-content;
-    margin: auto;
-    margin-top: 50px;
+  display: grid;
+  width: max-content;
+  margin: auto;
+  margin-top: 50px;
 }
 
 .mine-box {
-    background: url("../resources/box.svg");
-    width: 40px;
-    height: 40px;
-    background-size: cover;
-    transition: background background-size 0.5s !important;
+  background: url("../resources/box.svg");
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+  transition: background background-size 0.5s !important;
 }
 
 .flag-box {
-    background: url("../resources/flag-box.svg");
-    background-size: cover;
+  background: url("../resources/flag-box.svg");
+  background-size: cover;
 }
 
 .mine {
-    background: url("../resources/mine.svg") !important;
-    background-size: cover !important;
+  background: url("../resources/mine.svg") !important;
+  background-size: cover !important;
 }
 
 .open-box {
-    background: url("../resources/0mine.svg");
-    background-size: cover;
+  background: url("../resources/0mine.svg");
+  background-size: cover;
 }
 
 .open-box1 {
-    background: url("../resources/1mine.svg");
-    background-size: cover;
+  background: url("../resources/1mine.svg");
+  background-size: cover;
 }
 
 .open-box2 {
-    background: url("../resources/2mine.svg");
-    background-size: cover;
+  background: url("../resources/2mine.svg");
+  background-size: cover;
 }
 
 .open-box3 {
-    background: url("../resources/3mine.svg");
-    background-size: cover;
+  background: url("../resources/3mine.svg");
+  background-size: cover;
 }
 
 .open-box4 {
-    background: url("../resources/4mine.svg");
-    background-size: cover;
+  background: url("../resources/4mine.svg");
+  background-size: cover;
 }
 
 .open-box5 {
-    background: url("../resources/5mine.svg");
-    background-size: cover;
+  background: url("../resources/5mine.svg");
+  background-size: cover;
 }
 
 .open-box6 {
-    background: url("../resources/6mine.svg");
-    background-size: cover;
+  background: url("../resources/6mine.svg");
+  background-size: cover;
 }
 
 .open-box7 {
-    background: url("../resources/7mine.svg");
-    background-size: cover;
+  background: url("../resources/7mine.svg");
+  background-size: cover;
 }
 
 .open-box8 {
-    background: url("../resources/8mine.svg");
-    background-size: cover;
+  background: url("../resources/8mine.svg");
+  background-size: cover;
 }
 
 .clicked-mine {
-    background: url("../resources/Cmine.svg") !important;
-    background-size: cover !important;
+  background: url("../resources/Cmine.svg") !important;
+  background-size: cover !important;
 }
 
 .invalid {
-    background-color: tomato !important;
+  background-color: tomato !important;
 }
 
 .main-heading {
-    text-align: center;
-    font-size: 4em;
-    color: var(--color4);
-    margin-top: -10px;
+  text-align: center;
+  font-size: 4em;
+  color: var(--color4);
+  margin-top: -10px;
 }
 
 .heading-underline {
-    font-size: 4em;
-    text-align: center;
-    color: var(--color3);
+  font-size: 4em;
+  text-align: center;
+  color: var(--color3);
 }
 
 .topline {
-    transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 .input {
-    background-color: var(--color2);
-    border: 2px solid var(--color5);
-    width: 5rem;
-    height: 2rem;
-    font-size: 1.1em;
-    padding-bottom: 2px;
-    text-align: center;
+  background-color: var(--color2);
+  border: 2px solid var(--color5);
+  width: 5rem;
+  height: 2rem;
+  font-size: 1.1em;
+  padding-bottom: 2px;
+  text-align: center;
 }
 
 .minesweeper-settings {
-    margin: auto;
-    width: 500px;
-    display: grid;
-    place-items: center;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-row-gap: 20px;
+  margin: auto;
+  width: 500px;
+  display: grid;
+  place-items: center;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-row-gap: 20px;
 }
 
 .settings-submit {
-    grid-column: 1 / 4;
-    width: 5rem;
-    height: 2rem;
-    background-color: var(--color2);
-    border: 2px solid var(--color5);
-    cursor: pointer;
+  grid-column: 1 / 5;
+  width: 5rem;
+  height: 2rem;
+  background-color: var(--color2);
+  border: 2px solid var(--color5);
+  cursor: pointer;
 }
 
 .backdrop {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background-color: rgba(0, 0, 0, 0.3);
-    z-index: 2;
-    backdrop-filter: blur(5px);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 2;
+  backdrop-filter: blur(5px);
 }
 
 .modal {
-    position: absolute;
-    z-index: 3;
-    background-color: var(--color1);
-    padding: 20px;
-    border: 5px solid var(--color2);
-    top: 40%;
-    left: 50%;
-    transform: translateX(-50%);
+  position: absolute;
+  z-index: 3;
+  background-color: var(--color1);
+  padding: 20px;
+  border: 5px solid var(--color2);
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .modal-text {
-    margin-top: 2px;
+  margin-top: 2px;
 }
 
 .close-button {
-    width: 6rem;
-    height: 2rem;
-    background-color: var(--color2);
-    border: 2px solid var(--color5);
-    cursor: pointer;
-    margin-top: 10px;
+  width: 6rem;
+  height: 2rem;
+  background-color: var(--color2);
+  border: 2px solid var(--color5);
+  cursor: pointer;
+  margin-top: 10px;
 }
 
 .off {
-    display: none !important;
+  display: none !important;
 }
 
 .lost {
-    color: red;
+  color: red;
 }
 
 .stats {
-    width: max-content;
-    margin: auto;
-    height: 70px;
-    padding-top: 40px;
-    display: flex;
-    align-items: center;
-    gap: 100px;
+  width: max-content;
+  margin: auto;
+  height: 70px;
+  padding-top: 40px;
+  display: flex;
+  align-items: center;
+  gap: 100px;
 }
 
 .timer {
-    font-size: 2em;
-    background-color: var(--color2);
-    border: 2px solid var(--color5);
-    width: 7rem;
-    padding-bottom: 5px;
-    padding-left: 0.5px;
+  font-size: 2em;
+  background-color: var(--color2);
+  border: 2px solid var(--color5);
+  width: 7rem;
+  padding-bottom: 5px;
+  padding-left: 0.5px;
 }
 
 .flag-count {
-    display: flex;
-    align-items: center;
-    font-size: 2em;
+  display: flex;
+  align-items: center;
+  font-size: 2em;
 }
 
 .flag-count-text {
-    margin-top: -5px;
+  margin-top: -5px;
 }
 
 .flag-count > img {
-    height: 70px;
+  height: 70px;
 }
 
 .scoreboard-link {
-    display: block;
-    text-align: center;
-    text-decoration: none;
-    color: var(--color4);
-    font-size: 2em;
-    margin-bottom: 30px;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  color: var(--color4);
+  font-size: 2em;
+  margin-bottom: 30px;
 }
