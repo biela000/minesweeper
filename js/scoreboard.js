@@ -81,14 +81,14 @@ class Scoreboard {
             ).data.records;
             this.clearDOMRecords();
             this.createDOMRecords();
-            this.DOMInputs[0].innerHTML = "";
+            this.DOMInputs[2].innerHTML = "";
             this.records.forEach((_, ind) => {
                 const tmpOption = document.createElement("option");
                 tmpOption.value = ind + 1;
                 tmpOption.innerText = ind + 1;
-                this.DOMInputs[0].appendChild(tmpOption);
+                this.DOMInputs[2].appendChild(tmpOption);
             });
-            this.DOMInputs[0].value = this.records.length;
+            this.DOMInputs[2].value = this.records.length;
             this.changeProperty("amount", this.records.length);
         }
         if (name !== "mode") {
@@ -126,7 +126,7 @@ const sortInput = document.querySelector(".sort-input");
 const modeInput = document.querySelector(".mode-input");
 
 new Scoreboard(10, "DESC", scoreboardContainer, [
-    amountInput,
     sortInput,
     modeInput,
+    amountInput,
 ]);

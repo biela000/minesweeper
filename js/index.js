@@ -137,9 +137,13 @@ class Box {
 class MineSweeper {
     constructor() {
         this.username = minesweeperSettingsInputs.username.value;
-        this.width = Number(minesweeperSettingsInputs.width.value);
-        this.height = Number(minesweeperSettingsInputs.height.value);
-        this.mineCount = Number(minesweeperSettingsInputs.mineCount.value);
+        this.width = Math.floor(Number(minesweeperSettingsInputs.width.value));
+        this.height = Math.floor(
+            Number(minesweeperSettingsInputs.height.value)
+        );
+        this.mineCount = Math.floor(
+            Number(minesweeperSettingsInputs.mineCount.value)
+        );
         this.startTime = Date.now();
 
         this.firstClick = true;
